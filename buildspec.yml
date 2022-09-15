@@ -25,14 +25,14 @@ phases:
      # - dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY" /d:sonar.host.url="$SONAR_SERVER"  /d:sonar.login="$SONAR_LOGIN"
      # - dotnet build
      
-     # - dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY" /d:sonar.host.url="$SONAR_SERVER"  /d:sonar.login="$SONAR_LOGIN" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
-      #- dotnet build
-      #- dotnet-coverage collect 'dotnet test' -f xml  -o 'coverage.xml'
+      - dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY" /d:sonar.host.url="$SONAR_SERVER"  /d:sonar.login="$SONAR_LOGIN" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+      - dotnet build
+      - dotnet-coverage collect 'dotnet test' -f xml  -o 'coverage.xml'
       
-    #  - dotnet sonarscanner end /d:sonar.login="$SONAR_LOGIN"
-     # - curl -s -u "${SONAR_LOGIN}:" ${SONAR_SERVER}/api/qualitygates/project_status?projectKey=${SONAR_PROJECT_KEY} >sonarresult.json
-     # - cat sonarresult.json
-     # - if [ $(jq -r '.projectStatus.status' sonarresult.json) = ERROR ] ; then $CODEBUILD_BUILD_SUCCEEDING -eq 0 ; echo failed;exit 1;fi
+      - dotnet sonarscanner end /d:sonar.login="$SONAR_LOGIN"
+      - curl -s -u "${SONAR_LOGIN}:" ${SONAR_SERVER}/api/qualitygates/project_status?projectKey=${SONAR_PROJECT_KEY} >sonarresult.json
+      - cat sonarresult.json
+      - if [ $(jq -r '.projectStatus.status' sonarresult.json) = ERROR ] ; then $CODEBUILD_BUILD_SUCCEEDING -eq 0 ; echo failed;exit 1;fi
     
 
       - echo Build started on `date`
